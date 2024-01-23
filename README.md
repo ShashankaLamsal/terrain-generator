@@ -1,0 +1,2 @@
+-> To learn OpenGL
+-> Be familiar with it enough to start Major Project
