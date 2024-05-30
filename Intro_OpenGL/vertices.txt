@@ -1,0 +1,72 @@
+  //TRIANGLE
+/*
+GLfloat vertices[] =
+{                   // coordinate                       ||              colors      
+    -0.5f       ,-0.5f * float(sqrt(3)) / 3         ,0.0f,      0.647f, 0.165f, 0.165f,        //bottom left   :0
+    0.5f        ,-0.5f * float(sqrt(3)) / 3         ,0.0f,      0.180f, 0.545f, 0.341f,        //bottom right  :1
+    0.0f        ,(0.5f * float(sqrt(3)) * 2) / 3    ,0.0f,      0.275f, 0.510f, 0.706f,        //top          :2
+
+    -0.5f / 2   ,0.5f * float(sqrt(3)) / 6          ,0.0f,      0.647f, 0.165f, 0.165f,        //inner left   :3
+    0.5f / 2    ,0.5f * float(sqrt(3)) / 6          ,0.0f,      0.180f, 0.545f, 0.341f,        //inner right  :4
+    0.0f        ,-0.5f * float(sqrt(3)) / 3         ,0.0f,       0.275f, 0.510f, 0.706f        //inner bottom    :5
+
+};
+*/
+
+//traingle co-ords
+GLfloat vertices[] =
+{             // coordinates       ||    colors             || texture coordinates
+    -0.5f, 0.0f, -0.5f,         0.275f, 0.510f, 0.706f,         0.0f, 0.0f,  // bottom left
+     0.5f, 0.0f, -0.5f,         0.180f, 0.545f, 0.341f,         1.0f, 0.0f,  // bottom right
+     0.5f, 0.0f,  0.5f,         0.275f, 0.510f, 0.706f,         1.0f, 1.0f,  // top right
+    -0.5f, 0.0f,  0.5f,         0.180f, 0.545f, 0.341f,         0.0f, 1.0f,  // top left
+     //0.0f, 0.8f,  0.0f,         0.180f, 0.545f, 0.341f,         1.25f, 2.5f,   // top of the pyramid
+
+     //
+   - 0.5f, 1.0f, -0.5f,         0.275f, 0.510f, 0.706f,         0.0f, 0.0f,  // bottom left
+     0.5f, 1.0f, -0.5f,         0.180f, 0.545f, 0.341f,         1.0f, 0.0f,  // bottom right
+     0.5f, 1.0f,  0.5f,         0.275f, 0.510f, 0.706f,         1.0f, 1.0f,  // top right
+    -0.5f, 1.0f,  0.5f,         0.180f, 0.545f, 0.341f,         0.0f, 1.0f,  // top left
+};
+
+GLuint indices[] = {
+
+    0,1,2, 
+    0,2,3,  
+    4,5,6,
+    4,6,7,
+    0,1,5,
+    0,5,4,
+    1,2,6,
+    1,6,5,
+    2,3,7,
+    2,7,6,
+    0,3,7,
+    0,7,4 
+};
+/* pyramid indices
+GLuint indices[] = {
+
+    0,1,2,
+    0,2,3,
+    0,1,4,
+    1,2,4,
+    2,3,4,
+    3,0,4
+
+};
+*/
+
+/*//for multiple traingles
+    glm::vec3 cubePositions[] = {
+    glm::vec3(0.0f,  0.0f,  0.0f),
+    glm::vec3(2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3(2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3(1.3f, -2.0f, -2.5f),
+    glm::vec3(1.5f,  2.0f, -2.5f),
+    glm::vec3(1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+    };*/
