@@ -6,6 +6,8 @@
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include<glm/gtc/noise.hpp>
+#include<vector>
 
 
 
@@ -22,15 +24,15 @@ GLfloat vertices[] =
     // Coordinates        // Colors               // Texture Coordinates
     // Bottom face
     -0.5f, 0.0f, -0.5f,   0.275f, 0.510f, 0.706f,  0.0f, 0.0f, // bottom left
-     0.5f, 0.0f, -0.5f,   0.180f, 0.545f, 0.341f,  1.0f, 0.0f, // bottom right
-     0.5f, 0.0f,  0.5f,   0.275f, 0.510f, 0.706f,  1.0f, 1.0f, // top right
-    -0.5f, 0.0f,  0.5f,   0.180f, 0.545f, 0.341f,  0.0f, 1.0f, // top left
+     0.5f, 0.0f, -0.5f,   0.180f, 0.545f, 0.341f,  0.0f, 0.0f, // bottom right
+     0.5f, 0.0f,  0.5f,   0.275f, 0.510f, 0.706f,  0.0f, 0.0f, // top right
+    -0.5f, 0.0f,  0.5f,   0.180f, 0.545f, 0.341f,  0.0f, 0.0f, // top left
 
     // Top face
-    -0.5f, 1.0f, -0.5f,   0.275f, 0.510f, 0.706f,  0.0f, 0.0f, // bottom left
-     0.5f, 1.0f, -0.5f,   0.180f, 0.545f, 0.341f,  1.0f, 0.0f, // bottom right
-     0.5f, 1.0f,  0.5f,   0.275f, 0.510f, 0.706f,  1.0f, 1.0f, // top right
-    -0.5f, 1.0f,  0.5f,   0.180f, 0.545f, 0.341f,  0.0f, 1.0f, // top left
+    -0.5f, 1.0f, -0.5f,   0.224f, 0.675f, 0.224f,  0.9f, 0.9f, // bottom left
+     0.5f, 1.0f, -0.5f,   0.224f, 0.675f, 0.224f,  1.0f, 0.9f, // bottom right
+     0.5f, 1.0f,  0.5f,   0.224f, 0.675f, 0.224f,  1.0f, 1.0f, // top right
+    -0.5f, 1.0f,  0.5f,   0.224f, 0.675f, 0.224f,  0.9f, 1.0f, // top left
 
     // Front face
     -0.5f, 0.0f,  0.5f,   0.180f, 0.545f, 0.341f,  0.0f, 0.0f, // bottom left
@@ -65,6 +67,7 @@ GLuint indices[] = {
     16, 17, 18, 16, 18, 19, // left face
     20, 21, 22, 20, 22, 23  // right face
 };
+
 
 
 
@@ -120,18 +123,51 @@ int main()
     
 
     //naming the texture
-    Texture tameCat("cat_.bmp", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    Texture tameCat("grass.bmp", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
     tameCat.texUnit(shaderProgram, "tex0", 0);
 
     //inits the depth buffer
     glEnable(GL_DEPTH_TEST);
 
     //resolution along with distance from the model
-    Camera camera( width, height, glm::vec3(0.0f, 0.0f, 3.0f));
+    Camera camera( width, height, glm::vec3(0.0f, 8.0f, 40.0f));
+
+    float radius = 20;
+    
+    //glm::vec3 cubePositions[1000];
+    //IMPLEMENT ARRAYLIST USING VECTOR
+    std::vector<glm::vec3> cubePositions(10000);
+    std::vector<std::vector<float>> heightMap(width, std::vector<float>(height));
+    int cubeSize ;
+    int a ;
+    cubeSize = 0;
+    a = 0;
+    for (float x = -radius; x <= radius; ++x)
+    {
+        int b = 0;
+        for (float z = -radius; z <= radius; ++z)
+        {
+
+            glm::vec2 pos = glm::vec2(a, b) * 0.2f;
+            heightMap[a][b] = glm::perlin(pos);
+            float kek = glm::perlin(pos);
+            //float y = rand() % 2;
+            float y = heightMap[a][b];
+            cubePositions[cubeSize] = glm::vec3(x, y, z);
+            cubeSize++;
+
+            b++;
+
+        }
+        a++;
+
+    }
 
     //MAIN WHILE LOOP
     while (!glfwWindowShouldClose(window))
     {
+        //enablkes vsync
+        glfwSwapInterval(1);
 
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
@@ -142,17 +178,39 @@ int main()
         shaderProgram.Activate();
        
         camera.Inputs(window);
-        camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+        
+        camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix"); //passing FOV, Near PLane, Far PLane
 
-
+        float currentTime = glfwGetTime();
 
 
         tameCat.Bind();
         VAO1.Bind();
 
-        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
         
 
+        //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+        //for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
+        for (unsigned int i = 0; i < cubeSize; i++)
+        {
+            // Create a transformation matrix
+            glm::mat4 model = glm::mat4(1.0f);
+            
+
+            // rotation
+            float angle =  3*currentTime* glm::radians(360.0f); // 360 degrees per second
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+
+            model = glm::translate(model, cubePositions[i]);
+            
+            // Send the model matrix to the shader
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+            // Draw the cube
+            glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+        }
+        //////////////
         glfwSwapBuffers(window);
 
         glfwPollEvents(); //poll for GLFW events

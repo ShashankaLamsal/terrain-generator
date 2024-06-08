@@ -157,6 +157,9 @@
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\brick.png" />
     <Image Include="..\..\..\..\Downloads\cat_.bmp" />
+    <Image Include="..\..\..\..\Downloads\custom.png" />
+    <Image Include="..\..\..\..\Downloads\grass.bmp" />
+    <Image Include="..\..\..\..\Downloads\mountain.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="vertices.txt" />

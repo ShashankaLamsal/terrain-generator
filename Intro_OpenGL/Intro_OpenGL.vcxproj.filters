@@ -81,6 +81,15 @@
     <Image Include="..\..\..\..\Downloads\brick.png">
       <Filter>Resource Files\textures</Filter>
     </Image>
+    <Image Include="..\..\..\..\Downloads\mountain.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\custom.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\grass.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="vertices.txt">
