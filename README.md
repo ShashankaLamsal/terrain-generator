@@ -1,2 +1,3 @@
--> To learn OpenGL
--> Be familiar with it enough to start Major Project
+-> To create a Procedural Terrain Generator <br/>
+-> 
+-> 
