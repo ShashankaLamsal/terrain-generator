@@ -11,11 +11,13 @@
 
 
 
+
 #include"shaderClass.h"
 #include"VAO.h"
 #include"VBO.h"
 #include"EBO.h"
 #include"texture.h"
+#include"perlin.h"
 #include"camera.h"
 
 
@@ -142,6 +144,10 @@ int main()
     int a ;
     cubeSize = 0;
     a = 0;
+
+    
+
+    float height11[10000];
     for (float x = -radius; x <= radius; ++x)
     {
         int b = 0;
@@ -150,9 +156,11 @@ int main()
 
             glm::vec2 pos = glm::vec2(a, b) * 0.2f;
             heightMap[a][b] = glm::perlin(pos);
-            float kek = glm::perlin(pos);
+            //heightMap[a][b] = perlin(pos.x, pos.y);
+
             //float y = rand() % 2;
             float y = heightMap[a][b];
+            height11[cubeSize] = y/10;     //temp var for height
             cubePositions[cubeSize] = glm::vec3(x, y, z);
             cubeSize++;
 
@@ -162,6 +170,18 @@ int main()
         a++;
 
     }
+
+    //used for visual effect to spawn cubes one by one 
+    float elapsedTime = 0.0f;
+    float spawnInterval = 0.1f; // Adjust the interval as needed (in seconds)
+    unsigned int currentCubeIndex = 0;
+    
+    //for pulsing animation
+    int subDivision = 1;    
+    int subMax = 20;
+    int pulseFlag = 0;
+    float prevTime = 0;
+
 
     //MAIN WHILE LOOP
     while (!glfwWindowShouldClose(window))
@@ -181,7 +201,56 @@ int main()
         
         camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix"); //passing FOV, Near PLane, Far PLane
 
+
+        //basic loop to check how many cubes to spawn per frame 
+        /*
         float currentTime = glfwGetTime();
+        elapsedTime += currentTime;
+        
+        if (elapsedTime >= spawnInterval && currentCubeIndex < cubeSize)
+        {
+            currentCubeIndex++;
+            elapsedTime = 0.0f; // Reset elapsed time
+        }
+        */
+        /*
+        //for pulsing heightmap
+        float currentTime = glfwGetTime();
+        elapsedTime = currentTime - prevTime;
+        if (elapsedTime >= spawnInterval)
+        {
+            prevTime = currentTime;
+
+            if (pulseFlag==0)
+            {
+                if (subDivision == subMax)
+                    pulseFlag = 1;
+                for (unsigned int i = 0; i < cubeSize; i++)
+                {
+                    cubePositions[i][1] = subDivision * height11[i];
+
+
+                }
+                subDivision++;
+
+                
+            }
+            else
+            {
+                if (subDivision == 0)
+                    pulseFlag = 0;
+                for (unsigned int i = 0; i < cubeSize; i++)
+                {
+                    cubePositions[i][1] = subDivision * height11[i];
+
+
+                }
+                subDivision--;
+            }
+
+            elapsedTime = 0.0f; // Reset elapsed time
+        }
+        */
 
 
         tameCat.Bind();
@@ -192,6 +261,8 @@ int main()
 
         //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
         //for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
+
+        //for (unsigned int i = 0; i < currentCubeIndex; i++) //FOR ONE-BY-ONE RENDER ANIMATION
         for (unsigned int i = 0; i < cubeSize; i++)
         {
             // Create a transformation matrix
@@ -199,8 +270,8 @@ int main()
             
 
             // rotation
-            float angle =  3*currentTime* glm::radians(360.0f); // 360 degrees per second
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+            //float angle =  3*currentTime* glm::radians(360.0f); // 360 degrees per second
+            //model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
             model = glm::translate(model, cubePositions[i]);
             
@@ -211,6 +282,8 @@ int main()
             glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
         }
         //////////////
+        
+
         glfwSwapBuffers(window);
 
         glfwPollEvents(); //poll for GLFW events

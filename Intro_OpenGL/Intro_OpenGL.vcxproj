@@ -135,6 +135,7 @@
     <ClCompile Include="..\..\..\..\..\..\OPENGL STUFF\glad.c" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="perlin.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="perlin.h" />
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="VAO.h" />
