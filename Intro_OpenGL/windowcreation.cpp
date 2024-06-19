@@ -155,8 +155,14 @@ int main()
         {
 
             glm::vec2 pos = glm::vec2(a, b) * 0.2f;
-            heightMap[a][b] = glm::perlin(pos);
-            //heightMap[a][b] = perlin(pos.x, pos.y);
+            //heightMap[a][b] = glm::perlin(pos);
+
+            //for octaves
+            
+            heightMap[a][b] = perlin(pos.x, pos.y);
+
+
+            
 
             //float y = rand() % 2;
             float y = heightMap[a][b];
