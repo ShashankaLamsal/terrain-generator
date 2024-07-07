@@ -45,7 +45,7 @@ float interpolate(float a0, float a1, float w)
 
 
 // Sample Perlin noise at coordinates x, y
-float perlin(float x, float y) {
+float perlinBase(float x, float y) {
 
     // Determine grid cell corner coordinates
     int x0 = (int)x;
@@ -71,4 +71,21 @@ float perlin(float x, float y) {
     float value = interpolate(ix0, ix1, sy);
 
     return value;
+}
+
+float perlin(float x, float y, int octaves, float persistence, float ampMultiplier) {
+    float total = 0.0f;
+    float frequency = 1.0f;
+    float amplitude = 1.0f;
+    float maxValue = 0.0f;  // Used for normalizing result
+
+    for (int i = 0; i < octaves; i++) {
+        total += perlinBase(x * frequency, y * frequency) * amplitude;
+
+        maxValue += amplitude;
+        amplitude *= persistence;
+        frequency *= 2.0f;
+    }
+
+    return (total / maxValue)*ampMultiplier;
 }

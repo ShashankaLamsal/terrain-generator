@@ -145,7 +145,11 @@ int main()
     cubeSize = 0;
     a = 0;
 
-    
+    // constants for perlin noise
+    const int octaves = 6;                  // no. of layers of noise
+    const float persistence = 0.4f;         //influence of each subsequent octaves
+    const float frequency = 0.1f;           // base frequency spacing of hills
+    const float ampMultiplier = 4.0f;       //hill thingy
 
     float height11[10000];
     for (float x = -radius; x <= radius; ++x)
@@ -154,12 +158,12 @@ int main()
         for (float z = -radius; z <= radius; ++z)
         {
 
-            glm::vec2 pos = glm::vec2(a, b) * 0.2f;
+            glm::vec2 pos = glm::vec2(a, b) * frequency;
             //heightMap[a][b] = glm::perlin(pos);
 
             //for octaves
             
-            heightMap[a][b] = perlin(pos.x, pos.y);
+            heightMap[a][b] = perlin(pos.x, pos.y, octaves, persistence, ampMultiplier);
 
 
             

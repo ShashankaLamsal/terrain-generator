@@ -4,6 +4,9 @@
 #include <glm/glm.hpp>
 
 // generate a 2D Perlin noise value at a given position
-float perlin(float x,float y);
+//float perlinBase(float x,float y);
+
+// generate Perlin noise with multiple octaves
+float perlin(float x, float y, int octaves, float persistence, float ampMultiplier);
 
 #endif 
