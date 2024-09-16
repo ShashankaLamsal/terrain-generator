@@ -76,8 +76,14 @@ GLuint indices[] = {
 */
 
 glm::vec3 GetColorForHeight(float height) {
-    if (height < 0.2f) return glm::vec3(0.2f, 0.8f, 0.2f);  // Green for low areas
-    if (height < 0.5f) return glm::vec3(0.6f, 0.4f, 0.2f);  // Brown for mid-levels
+    if (height < 0.2f) 
+        return glm::vec3(0.2f, 1.0f, 0.2f);  // Green for low areas
+    if (height < 0.3f)
+        return glm::vec3(0.2f, 0.8f, 0.2f);
+    if (height < 0.4f)
+        return glm::vec3(0.2f, 0.6f, 0.2f);
+    if (height < 0.5f) 
+        return glm::vec3(0.6f, 0.4f, 0.2f);  // Brown for mid-levels
     return glm::vec3(1.0f, 1.0f, 1.0f);  // White for peaks
 }
 std::vector<Vertex> vertices;
@@ -156,7 +162,9 @@ int main()
     const float ampMultiplier = 4.0f;       //hill thingy                               ::4.0
     */
 
-    int gridSize = 50;  // size of the terrain 
+    const int minGrid = 16;
+    const int maxGrid = 256;
+    int gridSize = 100;  // size of the terrain 
     float scale = 2.0f;  // scale of the terrain
     int octaves = 4;     // Perlin ko octaves
     float persistence = 0.1f;  // persistence
@@ -165,8 +173,8 @@ int main()
     // *** LOW-POLY TERRAIN GENERATION USING PERLIN NOISE ***
 
     // terrain vertices using Perlin noise
-    for (int z = 0; z < gridSize; ++z) {
-        for (int x = 0; x < gridSize; ++x) {
+    for (int z = 0; z < gridSize; z++) {
+        for (int x = 0; x < gridSize; x++) {
             // Calculate height using Perlin noise
             float height1 = perlin(x * noiseScale, z * noiseScale, octaves, persistence, scale);
 
@@ -185,8 +193,8 @@ int main()
     }
 
     // for terrain indices (two triangles per quad)
-    for (int z = 0; z < gridSize - 1; ++z) {
-        for (int x = 0; x < gridSize - 1; ++x) {
+    for (int z = 0; z < gridSize - 1; z++) {
+        for (int x = 0; x < gridSize - 1; x++) {
             int topLeft = z * gridSize + x;
             int topRight = topLeft + 1;
             int bottomLeft = (z + 1) * gridSize + x;
@@ -308,7 +316,7 @@ int main()
     float prevTime = 0;
 
 
-
+    bool wireFrame=true;
 
 
 
@@ -330,16 +338,45 @@ int main()
         //ImGui::SetNextWindowPos(ImVec2(300, 300));  // Set the position of the ImGui window
         ImGui::Begin("Terrain Settings");
         ImGui::SliderFloat("Noise Scale", &noiseScale, 0.01f, 1.0f);
-        ImGui::SliderInt("Octaves", &octaves, 1, 8);
+        //ImGui::SliderInt("Octaves", &octaves, 4, 16);
         ImGui::SliderFloat("Persistence", &persistence, 0.1f, 1.0f);
+        
+        ImGui::Checkbox("Wireframe Mode", &wireFrame);
+
+        /*
+        // UI for adjusting gridSize to powers of 2
+        ImGui::Text("Grid Size (Power of 2)");
+        if (ImGui::Button("Decrease Grid Size") && gridSize > minGrid) {
+            gridSize /= 2; 
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Increase Grid Size") && gridSize < maxGrid) {
+            gridSize *= 2; 
+        }
+
+        ImGui::Text("Current Grid Size: %d", gridSize);
+        */
+
+
+
+
+
+
+
+
+
+
+
+
         ImGui::End();
 
-        
+        vertices.clear();
+        indices.clear();
     
         //RE RENDERING WITH NEW VALUES
 
-        for (int z = 0; z < gridSize; ++z) {
-            for (int x = 0; x < gridSize; ++x) {
+        for (int z = 0; z < gridSize; z++) {
+            for (int x = 0; x < gridSize; x++) {
                 // Calculate height using Perlin noise
                 float height1 = perlin(x * noiseScale, z * noiseScale, octaves, persistence, scale);
 
@@ -358,8 +395,8 @@ int main()
         }
 
         // for terrain indices (two triangles per quad)
-        for (int z = 0; z < gridSize - 1; ++z) {
-            for (int x = 0; x < gridSize - 1; ++x) {
+        for (int z = 0; z < gridSize - 1; z++) {
+            for (int x = 0; x < gridSize - 1; x++) {
                 int topLeft = z * gridSize + x;
                 int topRight = topLeft + 1;
                 int bottomLeft = (z + 1) * gridSize + x;
@@ -378,6 +415,17 @@ int main()
         }
 
 
+
+
+
+        // Re-upload the new data to the VBO and EBO
+        VBO1.Bind();
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+        VBO1.Unbind();  // Unbind the VBO after updating the data
+
+        EBO1.Bind();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+        EBO1.Unbind();  // Unbind the EBO after updating the data
 
         //enablkes vsync
         glfwSwapInterval(1);
@@ -469,6 +517,7 @@ int main()
             model = glm::translate(model, cubePositions[i]);
             
             // Send the model matrix to the shader
+
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
             // Draw the cube
@@ -479,7 +528,11 @@ int main()
 
         glm::mat4 model = glm::mat4(1.0f);  // Identity matrix for now
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
+
+        if(wireFrame)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         VAO1.Bind();
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
