@@ -138,6 +138,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\glad.c" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OPENGL Stuff\Include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="perlin.cpp" />

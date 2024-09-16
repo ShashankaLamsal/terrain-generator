@@ -1,15 +1,18 @@
 #include"EBO.h"
 
 
-EBO::EBO(GLuint* indices, GLsizeiptr size)
+//EBO::EBO(GLuint* indices, GLsizeiptr size)
+EBO::EBO(std::vector<GLuint>& indices)
 {
 	glGenBuffers(1, &ID);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID); //bind VBO specifying it is gl_array_buffer
 
 	//pass the vertices to the Buffer(VBO) in GPU
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
-
+	//voxel
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+	//lowpoly
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 }
 
 void EBO::Bind()

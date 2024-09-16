@@ -11,6 +11,7 @@ glm::vec2 randomGradient(int ix, int iy) {
     a *= 3284157443;
 
     b ^= a << s | a >> w - s;
+//shifts a to the left by s width
     b *= 1911520717;
 
     a ^= b << s | b >> w - s;

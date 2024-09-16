@@ -2,14 +2,14 @@
 
 //position coords
 layout (location = 0) in vec3 aPos;
-// color position
-layout (location = 1) in vec3 aColor;
-//texture co-ords
-layout (location = 2) in vec2 aTex;
+// normal position
+layout (location = 1) in vec3 aNormal;
+//color co-ords
+layout (location = 2) in vec3 aColor;
 
 
 out vec3 color;
-out vec2 texCoord;
+
 
 uniform mat4 model;
 
@@ -25,6 +25,6 @@ void main()
 
  //assigns the data from vertex color to color
  color=aColor;
- texCoord=aTex;
+ //texCoord=aTex;
 
 }
